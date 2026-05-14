@@ -3,9 +3,8 @@ import { useRef, useEffect } from 'react'
 function SearchBox({ value, onChange }) {
   const inputRef = useRef(null)
 
-  // TODO (Câu 1): Dùng useRef + useEffect để focus input khi component mount
   useEffect(() => {
-    // SV viết code ở đây
+    inputRef.current?.focus()
   }, [])
 
   return (
