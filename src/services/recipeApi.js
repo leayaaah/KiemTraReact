@@ -20,9 +20,13 @@ const FALLBACK_RECIPES = [
 export async function getRecipes() {
   try {
     const response = await axios.get(API_URL)
-    return Array.isArray(response.data) ? response.data : []
+    if (Array.isArray(response.data)) {
+      return response.data
+    }
+    console.warn(`Recipe API returned invalid data from ${API_URL}, using fallback recipes.`)
+    return FALLBACK_RECIPES
   } catch (error) {
-    console.warn('Cannot fetch recipes from API_URL, using fallback recipes.', error)
+    console.warn(`Cannot fetch recipes from ${API_URL}, using fallback recipes.`, error)
     return FALLBACK_RECIPES
   }
 }
