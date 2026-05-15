@@ -36,20 +36,23 @@ export async function getRecipes() {
 
 // TODO (Câu 5): Viết hàm GET chi tiết công thức theo id
 export async function getRecipeById(id) {
-  // ...
+  const response = await axios.get(`${API_URL}/${id}`)
+  return response.data
 }
 
 // TODO (Câu 7): Viết hàm POST thêm công thức mới
 export async function addRecipe(recipe) {
-  // ...
+  const response = await axios.post(API_URL, recipe)
+  return response.data
 }
 
 // TODO (Câu 8): Viết hàm DELETE công thức theo id
 export async function deleteRecipe(id) {
-  // ...
+  await axios.delete(`${API_URL}/${id}`)
 }
 
 // TODO (Câu 8): Viết hàm PUT cập nhật trạng thái yêu thích (favorite: boolean)
 export async function toggleFavorite(id, favorite) {
-  // axios.put(`${API_URL}/${id}`, { favorite })
+  const response = await axios.put(`${API_URL}/${id}`, { favorite })
+  return response.data
 }

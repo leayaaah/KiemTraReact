@@ -10,8 +10,7 @@ function FavoritesPage() {
 
   // TODO (Câu 6): Dùng useMemo lọc ra các công thức có favorite === true.
   const favorites = useMemo(() => {
-    // SV viết code ở đây
-    return []
+    return recipes.filter((r) => r.favorite === true)
   }, [recipes])
 
   // (Hàm xóa đã được viết sẵn để SV không phải làm lại)

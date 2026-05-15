@@ -12,9 +12,19 @@ function HomePage() {
   //   - hard        : số công thức độ khó 'hard'
   //   - favoriteCount : số công thức có favorite === true
   //   - avgCookTime : thời gian nấu trung bình (làm tròn nguyên), 0 nếu chưa có công thức nào
+  //
+  // Dùng useMemo ở đây hợp lý vì các giá trị thống kê chỉ cần tính lại khi `recipes` thay đổi.
+  // Nếu không dùng useMemo, mỗi lần component re-render (dù recipes không đổi) đều tính lại
+  // toàn bộ mảng, gây lãng phí hiệu năng khi danh sách công thức lớn.
   const stats = useMemo(() => {
-    // SV viết code ở đây
-    return { total: 0, easy: 0, medium: 0, hard: 0, favoriteCount: 0, avgCookTime: 0 }
+    const total = recipes.length
+    if (total === 0) return { total: 0, easy: 0, medium: 0, hard: 0, favoriteCount: 0, avgCookTime: 0 }
+    const easy = recipes.filter((r) => r.difficulty === 'easy').length
+    const medium = recipes.filter((r) => r.difficulty === 'medium').length
+    const hard = recipes.filter((r) => r.difficulty === 'hard').length
+    const favoriteCount = recipes.filter((r) => r.favorite === true).length
+    const avgCookTime = Math.round(recipes.reduce((sum, r) => sum + (r.cookTime || 0), 0) / total)
+    return { total, easy, medium, hard, favoriteCount, avgCookTime }
   }, [recipes])
 
   return (

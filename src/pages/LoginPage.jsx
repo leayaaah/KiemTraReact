@@ -12,7 +12,7 @@ function LoginPage() {
   const navigate = useNavigate()
 
   // TODO (Câu 9): Dùng useLocalStorage để có biến savedUser
-  //   const [savedUser, setSavedUser] = useLocalStorage('user', null)
+  const [savedUser, setSavedUser] = useLocalStorage('user', null)
 
   // TODO (Câu 9): Viết handleLogin:
   //   - Validate: username, password không rỗng
@@ -20,7 +20,18 @@ function LoginPage() {
   //   - Sai -> setError("Sai tài khoản hoặc mật khẩu")
   const handleLogin = (e) => {
     e.preventDefault()
-    // SV viết code ở đây
+    if (!username.trim() || !password.trim()) {
+      setError('Vui lòng nhập đầy đủ tài khoản và mật khẩu.')
+      return
+    }
+    if (username === 'chef' && password === '1234') {
+      const user = { username }
+      setUser(user)
+      setSavedUser(user)
+      navigate('/')
+    } else {
+      setError('Sai tài khoản hoặc mật khẩu')
+    }
   }
 
   return (

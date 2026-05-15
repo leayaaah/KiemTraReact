@@ -28,15 +28,21 @@ function RecipeListPage() {
   // TODO (Câu 6): Lọc danh sách công thức hiển thị theo:
   //   - difficulty ('all' | 'easy' | 'medium' | 'hard')
   //   - keyword: tìm theo tên (title), không phân biệt hoa thường
-  const displayedRecipes = recipes || [] // SV thay bằng kết quả filter
+  const displayedRecipes = (recipes || []).filter((r) => {
+    const matchDifficulty = difficulty === 'all' || r.difficulty === difficulty
+    const matchKeyword = r.title.toLowerCase().includes(keyword.toLowerCase())
+    return matchDifficulty && matchKeyword
+  })
 
   // TODO (Câu 8): Viết handleDelete dùng useCallback
   //   - window.confirm trước khi xóa
   //   - Gọi deleteRecipe(id)
   //   - Cập nhật recipesState (loại bỏ công thức đã xóa)
   const handleDelete = useCallback(async (id) => {
-    // SV viết code ở đây
-  }, [recipes, setRecipes])
+    if (!window.confirm('Bạn có chắc muốn xóa công thức này?')) return
+    await deleteRecipe(id)
+    setRecipes((prev) => prev.filter((r) => r.id !== id))
+  }, [setRecipes])
 
   return (
     <div>

@@ -30,8 +30,26 @@ const initialState = {
 }
 
 function formReducer(state, action) {
-  // SV viết các case ở đây
-  return state
+  switch (action.type) {
+    case 'SET_FIELD':
+      return { ...state, [action.field]: action.value, error: '' }
+    case 'ADD_INGREDIENT':
+      return { ...state, ingredients: [...state.ingredients, ''] }
+    case 'UPDATE_INGREDIENT': {
+      const updated = state.ingredients.map((ing, i) => (i === action.index ? action.value : ing))
+      return { ...state, ingredients: updated }
+    }
+    case 'REMOVE_INGREDIENT': {
+      const filtered = state.ingredients.filter((_, i) => i !== action.index)
+      return { ...state, ingredients: filtered }
+    }
+    case 'SET_ERROR':
+      return { ...state, error: action.error }
+    case 'RESET':
+      return initialState
+    default:
+      return state
+  }
 }
 
 function AddRecipePage() {
@@ -55,7 +73,37 @@ function AddRecipePage() {
   //   4. dispatch RESET, navigate('/recipes')
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // SV viết code ở đây
+    // Validate
+    if (!state.title.trim()) {
+      dispatch({ type: 'SET_ERROR', error: 'Tên món không được để trống.' })
+      return
+    }
+    if (!(Number(state.cookTime) > 0)) {
+      dispatch({ type: 'SET_ERROR', error: 'Thời gian nấu phải lớn hơn 0.' })
+      return
+    }
+    if (!(Number(state.servings) > 0)) {
+      dispatch({ type: 'SET_ERROR', error: 'Khẩu phần phải lớn hơn 0.' })
+      return
+    }
+    const validIngredients = state.ingredients.filter((ing) => ing.trim() !== '')
+    if (validIngredients.length === 0) {
+      dispatch({ type: 'SET_ERROR', error: 'Phải có ít nhất 1 nguyên liệu.' })
+      return
+    }
+    const payload = {
+      title: state.title.trim(),
+      difficulty: state.difficulty,
+      cookTime: Number(state.cookTime),
+      servings: Number(state.servings),
+      ingredients: validIngredients,
+      description: state.description,
+      favorite: false,
+    }
+    const newRecipe = await addRecipe(payload)
+    setRecipes((prev) => [...prev, newRecipe])
+    dispatch({ type: 'RESET' })
+    navigate('/recipes')
   }
 
   return (
