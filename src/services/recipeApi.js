@@ -43,9 +43,8 @@ export async function getRecipeById(id) {
     const fallbackRecipe = FALLBACK_RECIPES.find((recipe) => String(recipe.id) === String(id)) ?? null
     console.warn('Cannot fetch recipe detail from API. Using fallback result:', {
       recipeId: id,
-      apiUrl: API_URL,
       hasFallback: Boolean(fallbackRecipe),
-      error
+      errorMessage: error?.message ?? 'Unknown error'
     })
     return fallbackRecipe
   }
