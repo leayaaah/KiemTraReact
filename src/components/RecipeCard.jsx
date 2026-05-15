@@ -1,9 +1,10 @@
 import { memo } from 'react'
 
-// TODO (Câu 1): Trong file này SV cần viết comment trả lời 2 ý:
-//   1. Liệt kê các props mà RecipeCard nhận.
-//   2. Giải thích vì sao bọc bằng React.memo lại cần thiết khi có nhiều card.
-//      Khi nào memo KHÔNG có tác dụng?
+// RecipeCard nhận 3 props: `recipe`, `onView`, `onDelete`.
+// Bọc bằng React.memo giúp giảm re-render không cần thiết khi danh sách có nhiều card:
+// nếu props của card không đổi thì card đó không render lại, giúp UI mượt hơn.
+// memo KHÔNG có tác dụng khi mỗi lần render cha đều tạo prop mới (ví dụ object/hàm mới):
+// khi đó so sánh shallow thấy props đã đổi tham chiếu và card vẫn re-render.
 
 function RecipeCard({ recipe, onView, onDelete }) {
   const diffMap = {
