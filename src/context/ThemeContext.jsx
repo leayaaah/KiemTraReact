@@ -4,7 +4,10 @@ const ThemeContext = createContext({ theme: 'light', toggleTheme: () => {} })
 
 export function ThemeProvider({ children }) {
   // Code mặc định tối thiểu để app chạy được. SV cần NÂNG CẤP hàm này theo yêu cầu Câu 4.
-  const [theme, setTheme] = useState('light')
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme')
+    return savedTheme === 'dark' ? 'dark' : 'light'
+  })
 
   const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
@@ -19,6 +22,14 @@ export function ThemeProvider({ children }) {
   //      Gợi ý: dùng useEffect phụ thuộc [theme].
   //
   // Lưu ý: GIỮ NGUYÊN tên { theme, toggleTheme } trong value của Provider.
+  useEffect(() => {
+    localStorage.setItem('theme', theme)
+    if (theme === 'dark') {
+      document.body.classList.add('dark')
+    } else {
+      document.body.classList.remove('dark')
+    }
+  }, [theme])
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

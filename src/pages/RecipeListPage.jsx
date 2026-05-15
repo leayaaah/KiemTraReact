@@ -17,10 +17,12 @@ function RecipeListPage() {
   //   - Gợi ý: const { data, loading, error } = useFetch(getRecipes)
   //   - Sau khi có data, cần đồng bộ vào Recoil recipesState bằng useEffect
   //     để các trang khác (Home, Favorites) cũng có dữ liệu.
-  const { data, loading, error } = { data: null, loading: false, error: null } // SV thay bằng useFetch(...)
+  const { data, loading, error } = useFetch(getRecipes)
 
   useEffect(() => {
-    // SV: nếu data có giá trị thì setRecipes(data)
+    if (Array.isArray(data)) {
+      setRecipes(data)
+    }
   }, [data, setRecipes])
 
   // TODO (Câu 6): Lọc danh sách công thức hiển thị theo:

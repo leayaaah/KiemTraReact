@@ -14,5 +14,26 @@ import { useState, useEffect } from 'react'
 //   - Trả về { data, loading, error, refetch }
 //       refetch: hàm cho phép gọi lại fetcher để load lại dữ liệu
 export function useFetch(fetcher, deps = []) {
-  // SV viết code ở đây
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const runFetch = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await fetcher()
+      setData(result)
+    } catch (err) {
+      setError(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    runFetch()
+  }, deps)
+
+  return { data, loading, error, refetch: runFetch }
 }
