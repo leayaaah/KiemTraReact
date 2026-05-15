@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
 import HomePage from './pages/HomePage.jsx'
 import RecipeListPage from './pages/RecipeListPage.jsx'
 import RecipeDetailPage from './pages/RecipeDetailPage.jsx'
@@ -6,12 +8,32 @@ import AddRecipePage from './pages/AddRecipePage.jsx'
 import FavoritesPage from './pages/FavoritesPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import { useTheme } from './context/ThemeContext.jsx'
+import { userState } from './store/atoms.js'
+import { useLocalStorage } from './hooks/useLocalStorage.js'
+
+// Câu 10: ProtectedRoute – chưa đăng nhập thì chuyển hướng về /login
+function ProtectedRoute({ children }) {
+  const [user] = useRecoilState(userState)
+  if (!user) return <Navigate to="/login" replace />
+  return children
+}
 
 function App() {
   const { theme, toggleTheme } = useTheme()
+  const [user, setUser] = useRecoilState(userState)
+  const [savedUser, setSavedUser] = useLocalStorage('user', null)
 
-  // TODO (Câu 9): Lấy user từ Recoil để hiển thị tên + nút Logout trên navbar
-  // TODO (Câu 10): Bọc /add và /favorites bằng ProtectedRoute
+  // Câu 9: Khi reload trang, khôi phục user từ localStorage vào Recoil
+  useEffect(() => {
+    if (savedUser && !user) {
+      setUser(savedUser)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleLogout = () => {
+    setUser(null)
+    setSavedUser(null)
+  }
 
   return (
     <>
@@ -22,8 +44,15 @@ function App() {
           <NavLink to="/recipes">Công thức</NavLink>
           <NavLink to="/favorites">Yêu thích</NavLink>
           <NavLink to="/add">Thêm mới</NavLink>
-          <NavLink to="/login">Đăng nhập</NavLink>
-          {/* TODO (Câu 9): Khi đã login, ẩn link Đăng nhập, hiện "Xin chào, {username}" + nút Logout */}
+          {/* Câu 9: Ẩn link Đăng nhập khi đã login, hiện tên user + nút Logout */}
+          {user ? (
+            <>
+              <span style={{ marginLeft: 8, marginRight: 4 }}>Xin chào, {user.username}</span>
+              <button className="btn btn-ghost" onClick={handleLogout}>Đăng xuất</button>
+            </>
+          ) : (
+            <NavLink to="/login">Đăng nhập</NavLink>
+          )}
 
           <button className="theme-toggle" onClick={toggleTheme}>
             {theme === 'dark' ? '☀️ Sáng' : '🌙 Tối'}
@@ -36,8 +65,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/recipes" element={<RecipeListPage />} />
           <Route path="/recipes/:id" element={<RecipeDetailPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-          <Route path="/add" element={<AddRecipePage />} />
+          {/* Câu 10: Bọc /favorites và /add bằng ProtectedRoute */}
+          <Route path="/favorites" element={<ProtectedRoute><FavoritesPage /></ProtectedRoute>} />
+          <Route path="/add" element={<ProtectedRoute><AddRecipePage /></ProtectedRoute>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

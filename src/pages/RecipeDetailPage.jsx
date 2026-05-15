@@ -15,7 +15,11 @@ function RecipeDetailPage() {
   //   - Có xử lý loading
   //   - Khi id đổi thì fetch lại
   useEffect(() => {
-    // SV viết code ở đây
+    setLoading(true)
+    setRecipe(null)
+    getRecipeById(id)
+      .then((data) => setRecipe(data))
+      .finally(() => setLoading(false))
   }, [id])
 
   // TODO (Câu 8): handleToggleFavorite:
@@ -23,7 +27,12 @@ function RecipeDetailPage() {
   //   - Cập nhật state `recipe` (đảo favorite)
   //   - Cập nhật Recoil recipesState để danh sách ngoài kia đồng bộ
   const handleToggleFavorite = async () => {
-    // SV viết code ở đây
+    const newFavorite = !recipe.favorite
+    await toggleFavorite(id, newFavorite)
+    setRecipe((prev) => ({ ...prev, favorite: newFavorite }))
+    setRecipes((prev) =>
+      prev.map((r) => (String(r.id) === String(id) ? { ...r, favorite: newFavorite } : r))
+    )
   }
 
   if (loading) return <p>⏳ Đang tải...</p>
