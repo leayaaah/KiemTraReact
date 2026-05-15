@@ -22,6 +22,7 @@ export async function getRecipes() {
     const response = await axios.get(API_URL)
     return Array.isArray(response.data) ? response.data : []
   } catch (error) {
+    console.warn('Cannot fetch recipes from API_URL, using fallback recipes.', error)
     return FALLBACK_RECIPES
   }
 }
