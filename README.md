@@ -55,6 +55,7 @@ src/
 ## API
 
 Tạo mockapi.io với resource `recipes` rồi thay `API_URL` trong `src/services/recipeApi.js`.
+Nếu endpoint tạm thời không hoạt động, `getRecipes()` sẽ tự động dùng mảng dữ liệu cứng trong `src/services/recipeApi.js` để ứng dụng vẫn hiển thị được danh sách công thức.
 
 ## Nộp bài
 
