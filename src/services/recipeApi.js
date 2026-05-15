@@ -23,7 +23,10 @@ export async function getRecipes() {
     if (Array.isArray(response.data)) {
       return response.data
     }
-    console.warn(`Recipe API returned invalid data from ${API_URL}, using fallback recipes.`)
+    console.warn(
+      `Recipe API returned invalid data from ${API_URL} (type: ${typeof response.data}), using fallback recipes.`,
+      response.data
+    )
     return FALLBACK_RECIPES
   } catch (error) {
     console.warn(`Cannot fetch recipes from ${API_URL}, using fallback recipes.`, error)
