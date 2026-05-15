@@ -4,7 +4,8 @@ export const API_URL = 'https://REPLACE_WITH_YOUR_MOCKAPI_URL/recipes'
 
 // TODO (Câu 2): Viết hàm GET danh sách công thức bằng axios
 export async function getRecipes() {
-  // SV viết code ở đây
+  const response = await axios.get(API_URL)
+  return response.data
 }
 
 // TODO (Câu 5): Viết hàm GET chi tiết công thức theo id
