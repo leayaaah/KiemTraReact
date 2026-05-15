@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // TODO (Câu 4): Hoàn thiện custom hook useFetch
 // Mục đích: gói gọn việc gọi API + quản lý trạng thái loading/error/data.
@@ -18,7 +18,7 @@ export function useFetch(fetcher, deps = []) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const runFetch = async () => {
+  const runFetch = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -29,11 +29,11 @@ export function useFetch(fetcher, deps = []) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [fetcher, ...deps])
 
   useEffect(() => {
     runFetch()
-  }, deps)
+  }, [runFetch])
 
   return { data, loading, error, refetch: runFetch }
 }
