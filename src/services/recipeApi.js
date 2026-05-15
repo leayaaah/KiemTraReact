@@ -40,8 +40,14 @@ export async function getRecipeById(id) {
     const response = await axios.get(`${API_URL}/${id}`)
     return response.data
   } catch (error) {
-    console.warn(`Cannot fetch recipe ${id} from ${API_URL}, using fallback recipe if available.`, error)
-    return FALLBACK_RECIPES.find((recipe) => String(recipe.id) === String(id)) ?? null
+    const fallbackRecipe = FALLBACK_RECIPES.find((recipe) => String(recipe.id) === String(id)) ?? null
+    console.warn('Cannot fetch recipe detail from API. Using fallback result:', {
+      recipeId: id,
+      apiUrl: API_URL,
+      hasFallback: Boolean(fallbackRecipe),
+      error
+    })
+    return fallbackRecipe
   }
 }
 

@@ -24,8 +24,7 @@ function RecipeDetailPage() {
         if (isMounted) {
           setRecipe(data)
         }
-      } catch (error) {
-        console.error('Failed to fetch recipe detail:', error)
+      } catch {
         if (isMounted) {
           setRecipe(null)
         }
