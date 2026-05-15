@@ -36,7 +36,13 @@ export async function getRecipes() {
 
 // TODO (Câu 5): Viết hàm GET chi tiết công thức theo id
 export async function getRecipeById(id) {
-  // ...
+  try {
+    const response = await axios.get(`${API_URL}/${id}`)
+    return response.data
+  } catch (error) {
+    console.warn(`Cannot fetch recipe ${id} from ${API_URL}, using fallback recipe if available.`, error)
+    return FALLBACK_RECIPES.find((recipe) => String(recipe.id) === String(id)) ?? null
+  }
 }
 
 // TODO (Câu 7): Viết hàm POST thêm công thức mới

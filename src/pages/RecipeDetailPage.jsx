@@ -15,7 +15,32 @@ function RecipeDetailPage() {
   //   - Có xử lý loading
   //   - Khi id đổi thì fetch lại
   useEffect(() => {
-    // SV viết code ở đây
+    let isMounted = true
+
+    async function fetchRecipe() {
+      setLoading(true)
+      try {
+        const data = await getRecipeById(id)
+        if (isMounted) {
+          setRecipe(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch recipe detail:', error)
+        if (isMounted) {
+          setRecipe(null)
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchRecipe()
+
+    return () => {
+      isMounted = false
+    }
   }, [id])
 
   // TODO (Câu 8): handleToggleFavorite:
